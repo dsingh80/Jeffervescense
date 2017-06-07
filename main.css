@@ -1,0 +1,147 @@
+html{
+    font-family: "Arial", "Sans", "Georgia", serif;
+}
+
+body{
+    color: #FFF;
+    margin: 0;
+    padding: 0;
+    background: #cb356b; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #cb356b, #bd3f32); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #cb356b, #bd3f32); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+button{
+    border: 0;
+    padding: 10px;
+    color: #cb356b;
+}
+
+.logo{
+    display: block;
+    max-width: 500px;
+    margin: 60px auto;
+}
+
+#main{
+    width: 1300px;
+    min-height: 100vh;
+    background: rgba(255, 255, 255 ,.3);
+    padding: 0px 20px 0px 20px;
+    margin: auto;
+    box-shadow: 0 0px 18px 0px #9c1655;
+}
+#addItemForm{
+    margin-left: -20px;
+    padding: 15px;
+    width: 1310px;
+    background-color: rgba(255, 255, 255, .3);
+}
+
+#addItemForm input[type=text]{
+
+    color: #DDD;
+    width: 1040px;
+    padding: 15px 5px;
+    margin-right: 10px;
+    background-color: #cb356b; /*rgba(0,0,0, 0); */
+    border: 0;
+    
+}
+
+#addItemForm button{
+    width: 240px;
+    padding: 15px 5px;
+    background-color: #FFF;
+}
+
+
+#foodList{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin: auto;
+    
+}
+
+#listName{
+    font-weight: normal;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+#foodList li{
+    text-decoration: none;
+    text-align: center;
+    padding: 2px;
+    border-bottom: 1px solid #ccc;
+}
+
+.foodItem{
+    display: block;
+    width: 100%;
+    transition: background .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-bottom: 3px auto;
+}
+
+.foodName{
+    display: inline-block;
+    width: 900px;
+    text-align: left;
+    font-size: 20px;
+    padding: 5px;
+    font-weight: normal;
+}
+
+
+.btnDelete{
+    width: 100px;
+}
+
+.btnDelete:hover{
+    background-color: #cb356b;
+}
+
+.btnPromote{
+    width: 100px;
+}
+
+.btnPromote:hover{
+    background-color: #35CB41;
+}
+
+.btnUp{
+    width: 50px;
+}
+
+.btnUp:hover{
+    background-color: #187F98;
+}
+
+.btnDown{
+    width: 50px;
+}
+
+.btnDown:hover{
+    background-color: #187F98;
+}
+
+
+.foodItem button{
+    display: inline-block;
+    background-color: #FFF;
+    border-radius: 12px;
+    padding: 15px 0px;
+    transition: border-radius .2s ease-out;
+    transition: background-color .15s cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+.foodItem button:hover{
+    border-radius: 0px;
+    color: #FFF;
+}
+
+.promoted{
+    background: rgba(255, 255, 255, .34);
+}
+

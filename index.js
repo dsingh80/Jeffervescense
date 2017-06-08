@@ -33,10 +33,12 @@ const JavascriptRoster = {
         this.foodItemsList.push(food);
         this.saveList();
 
+        foodLI.querySelector('.btnEdit').addEventListener('click', this.editItem.bind(this));
         foodLI.querySelector('.btnDelete').addEventListener('click', this.deleteItem.bind(this));
         foodLI.querySelector('.btnPromote').addEventListener('click', this.promoteItem.bind(this));
         foodLI.querySelector('.btnUp').addEventListener('click', this.moveItemUp.bind(this));
         foodLI.querySelector('.btnDown').addEventListener('click', this.moveItemDown.bind(this));
+        
 
         ev.target.reset();
 
@@ -46,6 +48,7 @@ const JavascriptRoster = {
         const makeItemFunc = this.makeItem.bind(this);
         const foodLI = makeItemFunc(food);
 
+        foodLI.querySelector('.btnEdit').addEventListener('click', this.editItem.bind(this));
         foodLI.querySelector('.btnDelete').addEventListener('click', this.deleteItem.bind(this));
         foodLI.querySelector('.btnPromote').addEventListener('click', this.promoteItem.bind(this));
         foodLI.querySelector('.btnUp').addEventListener('click', this.moveItemUp.bind(this));
@@ -61,10 +64,11 @@ const JavascriptRoster = {
         newItem.innerHTML = `
             <div class="foodItem">
                 <span class="foodName" contenteditable="false">${food.id}</span>
-                <button class="btnDelete">Delete</button>
-                <button class="btnPromote">Promote</button>
-                <button class="btnUp">Up</button>
-                <button class="btnDown">Down</button>
+                <button class="button btnEdit">Edit</button>
+                <button class="button btnDelete">Delete</button>
+                <button class="button btnPromote">Promote</button>
+                <button class="button btnUp">Up</button>
+                <button class="button btnDown">Down</button>
             </div>
         `;
 
@@ -188,16 +192,16 @@ const JavascriptRoster = {
     },
 
     editItem: function(ev){
-        const text = ev.target;
+        const targ = ev.target;
 
-        if(text.contentEditable == "false"){
-            text.contentEditable = "true";
-
+        if(targ.contentEditable == "false"){
+            targ.contentEditable = "true";
+            
         }
         else{
-            const newText = text.textContent;
-            text.contentEditable = "false";
-            text.textContent = newText;
+            const newText = targ.textContent;
+            targ.contentEditable = "false";
+            targ.textContent = newText;
         }
     },
 

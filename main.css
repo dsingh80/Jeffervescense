@@ -86,7 +86,7 @@ button{
 
 .foodName{
     display: inline-block;
-    width: 900px;
+    width: 850px;
     text-align: left;
     font-size: 20px;
     padding: 5px;
@@ -94,6 +94,15 @@ button{
     margin: 1em auto;
 }
 
+.btnEdit{
+    display: inline-block;
+    width: 50px;
+    background: none;
+}
+
+.btnEdit:hover{
+    background-color: #9C27B0;
+}
 
 .btnDelete{
     width: 100px;

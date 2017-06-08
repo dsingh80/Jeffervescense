@@ -7,6 +7,7 @@ const JavascriptRoster = {
         document.querySelector(formSelector).foodName.focus();
         document.querySelector(formSelector).addEventListener('submit', this.addItem.bind(this));
         this.getFoodList = this.getFoodList.bind(this);
+
     },
 
     getFoodList: function(){
@@ -200,11 +201,13 @@ const JavascriptRoster = {
         if(textField.contentEditable == "false"){
             textField.contentEditable = "true";
             textField.focus();
+            targ.textContent = "Done"
         }
         else{
             const newText = textField.textContent;
             textField.contentEditable = "false";
-
+            targ.textContent = "Edit"
+            
             // Save new entry
             textField.textContent = newText;
 
@@ -212,6 +215,7 @@ const JavascriptRoster = {
             this.findItem(foodLI)[0].id = newText;
             foodLI.dataset.id = newText;
 
+            
             this.saveList();
         }
 

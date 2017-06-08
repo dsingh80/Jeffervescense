@@ -5,6 +5,7 @@ const JavascriptRoster = {
 
     init: function(formSelector){
         this.loadList();
+        document.querySelector(formSelector).foodName.focus();
         document.querySelector(formSelector).addEventListener('submit', this.addItem.bind(this));
         this.getFoodList = this.getFoodList.bind(this);
     },
@@ -16,7 +17,7 @@ const JavascriptRoster = {
     addItem: function(ev){
         ev.preventDefault();
 
-        const foodName = addItemForm.foodName.value;
+        const foodName = ev.target.foodName.value;
         if(foodName == "" || foodName==null){
             alert("Please enter a food name!");
             return;
@@ -32,6 +33,8 @@ const JavascriptRoster = {
         food.querySelector('.btnPromote').addEventListener('click', this.promoteItem.bind(this));
         food.querySelector('.btnUp').addEventListener('click', this.moveItemUp.bind(this));
         food.querySelector('.btnDown').addEventListener('click', this.moveItemDown.bind(this));
+
+        ev.target.reset();
 
     },
 

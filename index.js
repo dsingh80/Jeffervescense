@@ -1,7 +1,6 @@
 const JavascriptRoster = {
 
     foodItemsList: [],
-    numFoods: 0,
 
     init: function(formSelector){
         this.loadList();
@@ -22,44 +21,47 @@ const JavascriptRoster = {
             alert("Please enter a food name!");
             return;
         }
-        const makeItemFunc = this.makeItem.bind(this);
-        const food = makeItemFunc(foodName);
 
-        this.foodItemsList.push(food.dataset.key);
-        
+        const food = {
+            id: foodName,
+            promoted: false,
+        }
+
+        const makeItemFunc = this.makeItem.bind(this);
+        const foodLI = makeItemFunc(food);
+
+        this.foodItemsList.push(food);
         this.saveList();
 
-        food.querySelector('.btnDelete').addEventListener('click', this.deleteItem.bind(this));
-        food.querySelector('.btnPromote').addEventListener('click', this.promoteItem.bind(this));
-        food.querySelector('.btnUp').addEventListener('click', this.moveItemUp.bind(this));
-        food.querySelector('.btnDown').addEventListener('click', this.moveItemDown.bind(this));
+        foodLI.querySelector('.btnDelete').addEventListener('click', this.deleteItem.bind(this));
+        foodLI.querySelector('.btnPromote').addEventListener('click', this.promoteItem.bind(this));
+        foodLI.querySelector('.btnUp').addEventListener('click', this.moveItemUp.bind(this));
+        foodLI.querySelector('.btnDown').addEventListener('click', this.moveItemDown.bind(this));
 
+        console.log(this.foodItemsList);
         ev.target.reset();
 
     },
 
-    addItem2: function(foodName){
+    addItem2: function(food){
         const makeItemFunc = this.makeItem.bind(this);
-        const food = makeItemFunc(foodName);
+        const foodLI = makeItemFunc(food);
 
-        this.foodItemsList.push(food.dataset.key);
+        foodLI.querySelector('.btnDelete').addEventListener('click', this.deleteItem.bind(this));
+        foodLI.querySelector('.btnPromote').addEventListener('click', this.promoteItem.bind(this));
+        foodLI.querySelector('.btnUp').addEventListener('click', this.moveItemUp.bind(this));
+        foodLI.querySelector('.btnDown').addEventListener('click', this.moveItemDown.bind(this));
 
-        food.querySelector('.btnDelete').addEventListener('click', this.deleteItem.bind(this));
-        food.querySelector('.btnPromote').addEventListener('click', this.promoteItem.bind(this));
-        food.querySelector('.btnUp').addEventListener('click', this.moveItemUp.bind(this));
-        food.querySelector('.btnDown').addEventListener('click', this.moveItemDown.bind(this));
-
-        return food;
+        return foodLI;
     },
 
-    makeItem: function(foodName){
+    makeItem: function(food){
         const newItem = document.createElement('li');
-        newItem.dataset.key = foodName; //this.numFoods.toString();
-        this.numFoods++;
+        newItem.dataset.id = food.id;
 
         newItem.innerHTML = `
             <div class="foodItem">
-                <p class="foodName">${foodName}</p>
+                <span class="foodName" contenteditable="false">${food.id}</span>
                 <button class="btnDelete">Delete</button>
                 <button class="btnPromote">Promote</button>
                 <button class="btnUp">Up</button>
@@ -71,39 +73,70 @@ const JavascriptRoster = {
         return newItem;
     },
 
-    promoteItem: function(ev){
-        const foodItem = ev.target.parentNode;  //.querySelector('.foodName');
+    findItem: function(foodLI){
+        for(let i=0; i<this.foodItemsList.length; i++){
+            if(this.foodItemsList[i].id == foodLI.dataset.id){
+                return [this.foodItemsList[i], i];
+            }
+        }
+    },
 
-        if(foodItem.classList.contains('promoted')){
-            foodItem.classList.remove('promoted');
-            foodItem.parentNode.dataset.key = foodItem.querySelector('.foodName').textContent;
+    findLI: function(foodID){
+        const list = document.querySelector('#foodList');
+        const listItems = list.childNodes;
+        for(let i=0; i<listItems.length; i++){
+            if (listItems[i].dataset.id == foodID)
+                return listItems[i];
+        }
+    },
+
+    promoteItem: function(ev){
+        const foodLI = ev.target.parentNode.parentNode;  //.querySelector('.foodName');  
+        const food = (this.findItem(foodLI))[0];
+
+        if(ev.target.parentNode.classList.contains('promoted')){
+            ev.target.parentNode.classList.remove('promoted');
+            food.promoted = false;
         }
         else{
-            foodItem.classList.add('promoted');
-            foodItem.parentNode.dataset.key = foodItem.querySelector('.foodName').textContent + "_0ea7034b";
+            ev.target.parentNode.classList.add('promoted');
+            food.promoted = true;
         }
-        
-        console.log(this);
+
         this.saveList();
 
     },
+
+    promoteItem2: function(food){
+        
+        const foodLI = this.findLI(food.id);
+        const promoteDiv = foodLI.firstElementChild;
+
+        if(promoteDiv.classList.contains('promoted')){
+            promoteDiv.classList.remove('promoted');
+            food.promoted = false;
+        }
+        else{
+            promoteDiv.classList.add('promoted');
+            food.promoted = true;
+        }
+    },
+
 
     deleteItem: function(ev){
         const targ = ev.target;
         const foodList = document.querySelector('#foodList');
         
-        const foodItem = targ.parentNode.parentNode;
+        const foodLI = targ.parentNode.parentNode;
+        
+        const food = this.findItem(foodLI)[0]
+        const foodIndex = this.findItem(foodLI)[1];
 
-        const index = this.foodItemsList.indexOf(foodItem.dataset.key);
-        if(index > -1){
-            this.foodItemsList.splice(index, 1); // remove from array
-            this.numFoods--;
-        }
-        else{
-            console.log("Food not found in array!");
+        if(foodIndex > -1){
+            this.foodItemsList.splice(foodIndex, 1); // remove from array
         }
 
-        foodList.removeChild(foodItem);
+        foodList.removeChild(foodLI);
 
         this.saveList();
     },
@@ -114,19 +147,20 @@ const JavascriptRoster = {
         const foodList = document.querySelector('#foodList');
         
         const currentItem = targ.parentNode.parentNode;
-        const currentKey = currentItem.dataset.key;
-        const currentIndex = this.foodItemsList.indexOf(currentKey);
+        const currentFood = this.findItem(currentItem)[0];
+        const currentIndex = this.findItem(currentItem)[1];
 
         if(currentIndex >= this.foodItemsList.length-1)
             return;
 
-        const replaceKey = this.foodItemsList[currentIndex+1];
         const replaceItem = currentItem.previousElementSibling;
+        const replaceFood = this.findItem(replaceItem)[0];
+        const replaceIndex = this.findItem(replaceItem)[1];
         
         foodList.insertBefore(currentItem, replaceItem);
         
-        this.foodItemsList[currentIndex] = replaceKey;
-        this.foodItemsList[currentIndex+1] = currentKey;
+        this.foodItemsList[currentIndex] = replaceFood;
+        this.foodItemsList[replaceIndex] = currentFood;
 
         this.saveList();
 
@@ -138,33 +172,41 @@ const JavascriptRoster = {
         const foodList = document.querySelector('#foodList');
         
         const currentItem = targ.parentNode.parentNode;
-        const currentKey = currentItem.dataset.key;
-        const currentIndex = this.foodItemsList.indexOf(currentKey);
+        const currentFood = this.findItem(currentItem)[0];
+        const currentIndex = this.findItem(currentItem)[1];
 
-        if(currentIndex <= 0)
+        if(currentIndex < 1)
             return;
 
-        const replaceKey = this.foodItemsList[currentIndex-1];
-        const replaceItem = currentItem.nextElementSibling;
+        const replaceItem = currentItem.previousElementSibling;
+        const replaceFood = this.findItem(replaceItem)[0];
+        const replaceIndex = this.findItem(replaceItem)[1];
         
-        foodList.insertBefore(currentItem, replaceItem.nextElementSibling);
+        foodList.insertBefore(replaceItem, currentItem);
         
-        this.foodItemsList[currentIndex] = replaceKey;
-        this.foodItemsList[currentIndex-1] = currentKey;
+        this.foodItemsList[currentIndex] = replaceFood;
+        this.foodItemsList[replaceIndex] = currentFood;
 
         this.saveList();
 
     },
 
+    editItem: function(ev){
+        const text = ev.target;
+
+        if(text.contentEditable == "false"){
+            text.contentEditable = "true";
+
+        }
+        else{
+            const newText = text.textContent;
+            text.contentEditable = "false";
+            text.textContent = newText;
+        }
+    },
+
     saveList: function(){
         // Save current session
-        const foodList = document.querySelector('#foodList');
-        const listItems = foodList.children;
-
-        for(let i=0; i<listItems.length; i++){
-            this.foodItemsList[i] = listItems[listItems.length-1-i].dataset.key;
-        }
-
         localStorage.setItem('foodRosterList', JSON.stringify(this.foodItemsList));
         
     },
@@ -172,28 +214,18 @@ const JavascriptRoster = {
     loadList: function(){
         // Load the previous session
 
-        const rawdata = JSON.parse(localStorage.getItem('foodRosterList'));
+        const foodArray = JSON.parse(localStorage.getItem('foodRosterList'));
 
-        if(rawdata == null)
+        if(!foodArray || foodArray == null)
             return null;
 
-        let key = "";
-        let newItem = null;
+        console.log(this.foodItemsList);
 
-        for(let i=0; i<rawdata.length; i++){
-
-            key = rawdata[i];
-
-            if(key.endsWith("_0ea7034b")){
-                newItem = this.addItem2(key.substring(0, key.length-9));
-                newItem.children[0].classList.add('promoted');
-                newItem.dataset.key = newItem.querySelector('.foodName').textContent + "_0ea7034b";
-            }
-            else{
-                this.addItem2(key);
-            }
-
-
+        for(let i=0; i<foodArray.length; i++){
+            this.foodItemsList.push(foodArray[i])
+            const foodLI = this.addItem2(this.foodItemsList[i])
+            if(this.foodItemsList[i].promoted)
+                this.promoteItem2(foodLI);
         }
     }
 }

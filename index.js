@@ -64,11 +64,11 @@ const JavascriptRoster = {
         newItem.innerHTML = `
             <div class="foodItem">
                 <span class="foodName" contenteditable="false">${food.id}</span>
-                <button class="button btnEdit">Edit</button>
-                <button class="button btnDelete">Delete</button>
-                <button class="button btnPromote">Promote</button>
-                <button class="button btnUp">Up</button>
-                <button class="button btnDown">Down</button>
+                <button class="btnEdit">Edit</button>
+                <button class="btnDelete">Delete</button>
+                <button class="btnPromote">Promote</button>
+                <button class="btnUp">Up</button>
+                <button class="btnDown">Down</button>
             </div>
         `;
 
@@ -194,14 +194,19 @@ const JavascriptRoster = {
     editItem: function(ev){
         const targ = ev.target;
 
-        if(targ.contentEditable == "false"){
-            targ.contentEditable = "true";
+        const textField = targ.parentNode.querySelector('.foodName');
+
+        if(textField.contentEditable == "false"){
+            textField.contentEditable = "true";
+            textField.focus();
+            console.log("Content Editable Enabled");
             
         }
         else{
-            const newText = targ.textContent;
-            targ.contentEditable = "false";
-            targ.textContent = newText;
+            const newText = textField.textContent;
+            textField.contentEditable = "false";
+            console.log("Content Editable Disabled");
+            textField.textContent = newText;
         }
     },
 

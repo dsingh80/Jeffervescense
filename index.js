@@ -38,7 +38,6 @@ const JavascriptRoster = {
         foodLI.querySelector('.btnUp').addEventListener('click', this.moveItemUp.bind(this));
         foodLI.querySelector('.btnDown').addEventListener('click', this.moveItemDown.bind(this));
 
-        console.log(this.foodItemsList);
         ev.target.reset();
 
     },
@@ -107,18 +106,15 @@ const JavascriptRoster = {
 
     },
 
-    promoteItem2: function(food){
-        
-        const foodLI = this.findLI(food.id);
+    promoteItem2: function(foodLI){
+
         const promoteDiv = foodLI.firstElementChild;
 
         if(promoteDiv.classList.contains('promoted')){
             promoteDiv.classList.remove('promoted');
-            food.promoted = false;
         }
         else{
             promoteDiv.classList.add('promoted');
-            food.promoted = true;
         }
     },
 
@@ -169,23 +165,23 @@ const JavascriptRoster = {
     moveItemDown: function(ev){
         const targ = ev.target;
 
-        const foodList = document.querySelector('#foodList');
-        
-        const currentItem = targ.parentNode.parentNode;
-        const currentFood = this.findItem(currentItem)[0];
-        const currentIndex = this.findItem(currentItem)[1];
+        const list = document.querySelector('#foodList');
+
+        const currentLI = targ.closest('li')
+        const currentFood = this.findItem(currentLI)[0];
+        const currentIndex = this.findItem(currentLI)[1];
 
         if(currentIndex < 1)
             return;
 
-        const replaceItem = currentItem.previousElementSibling;
-        const replaceFood = this.findItem(replaceItem)[0];
-        const replaceIndex = this.findItem(replaceItem)[1];
-        
-        foodList.insertBefore(replaceItem, currentItem);
-        
-        this.foodItemsList[currentIndex] = replaceFood;
+        const replaceLI = currentLI.nextElementSibling
+        const replaceFood = this.findItem(replaceLI)[0];
+        const replaceIndex = this.findItem(replaceLI)[1];
+
+        list.insertBefore(replaceLI, currentLI);
+
         this.foodItemsList[replaceIndex] = currentFood;
+        this.foodItemsList[currentIndex] = replaceFood;
 
         this.saveList();
 
@@ -218,8 +214,6 @@ const JavascriptRoster = {
 
         if(!foodArray || foodArray == null)
             return null;
-
-        console.log(this.foodItemsList);
 
         for(let i=0; i<foodArray.length; i++){
             this.foodItemsList.push(foodArray[i])

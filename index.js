@@ -194,20 +194,27 @@ const JavascriptRoster = {
     editItem: function(ev){
         const targ = ev.target;
 
+        const foodLI = targ.closest('li');
         const textField = targ.parentNode.querySelector('.foodName');
-
+        
         if(textField.contentEditable == "false"){
             textField.contentEditable = "true";
             textField.focus();
-            console.log("Content Editable Enabled");
-            
         }
         else{
             const newText = textField.textContent;
             textField.contentEditable = "false";
-            console.log("Content Editable Disabled");
+
+            // Save new entry
             textField.textContent = newText;
+
+            // update li data-id
+            this.findItem(foodLI)[0].id = newText;
+            foodLI.dataset.id = newText;
+
+            this.saveList();
         }
+
     },
 
     saveList: function(){

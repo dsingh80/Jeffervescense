@@ -67,7 +67,7 @@ const JavascriptRoster = {
             </div>
         `;
 
-        foodList.prepend(newItem);
+        document.querySelector('#foodList').insertBefore(newItem, document.querySelector('#foodList').firstChild);
         return newItem;
     },
 
@@ -76,11 +76,11 @@ const JavascriptRoster = {
 
         if(foodItem.classList.contains('promoted')){
             foodItem.classList.remove('promoted');
-            foodItem.parentNode.dataset.key = foodItem.parentNode.dataset.key - "_0ea7034b";
+            foodItem.parentNode.dataset.key = foodItem.querySelector('.foodName').textContent;
         }
         else{
             foodItem.classList.add('promoted');
-            foodItem.parentNode.dataset.key = foodItem.parentNode.dataset.key + "_0ea7034b";
+            foodItem.parentNode.dataset.key = foodItem.querySelector('.foodName').textContent + "_0ea7034b";
         }
         
         console.log(this);
@@ -185,8 +185,9 @@ const JavascriptRoster = {
             key = rawdata[i];
 
             if(key.endsWith("_0ea7034b")){
-                newItem = this.addItem2(key.substr(0, key.length-9));
+                newItem = this.addItem2(key.substring(0, key.length-9));
                 newItem.children[0].classList.add('promoted');
+                newItem.dataset.key = newItem.querySelector('.foodName').textContent + "_0ea7034b";
             }
             else{
                 this.addItem2(key);
